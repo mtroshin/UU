@@ -11,47 +11,55 @@
     </div>
 
     <div class="constructor">
+
       <div class="availableFields">
         <p>Доступные поля:</p>
         <div class="fields">
-              <label class="item" *ngFor="let column of columns">
-                <input type="checkbox"  value="{{column?.name}}">
-                <div>{{column?.name}}</div> </label>
+          <label class="item" *ngFor="let column of columns">
+            <input type="checkbox" value="{{column?.name}}">
+            <div>{{column?.name}}</div>
+          </label>
         </div>
       </div>
+
       <div class="control">
-        <button class="next" title="Добавить" (click)="fieldsForward()"><i class="fas fa-angle-double-right"></i></button>
+        <button class="next" title="Добавить" (click)="fieldsForward()"><i class="fas fa-angle-double-right"></i>
+        </button>
       </div>
+
       <div class="selectedFields">
         <p>Выбранные поля:</p>
         <div class="fields">
 
           <label class="choose" *ngFor="let sel of selectedColumns">
-            <input type="checkbox"  value="{{sel}}">
-            <div>{{sel}}</div>  </label>
+            <input type="checkbox" value="{{sel}}">
+            <div>{{sel}}</div>
+          </label>
         </div>
       </div>
+
       <div class="controlButtons">
         <div class="controlColumn">
-        <button class="removeColumn" title="Удалить" (click)="deleteColumn()"><i class="fas fa-times"></i></button>
-        <button class="upСolumn" title="Верх" (click)="upColumns()"><i class="fas fa-angle-up"></i></button>
-        <button class="downСolumn" title="Вниз" (click)="dawnColumns()"><i class="fas fa-angle-down"></i></button>
+          <button class="removeColumn" title="Удалить" (click)="deleteColumn()"><i class="fas fa-times"></i></button>
+          <button class="upСolumn" title="Верх" (click)="upColumns()"><i class="fas fa-angle-up"></i></button>
+          <button class="downСolumn" title="Вниз" (click)="dawnColumns()"><i class="fas fa-angle-down"></i></button>
         </div>
         <button class="sendRequest" title="Отправить" (click)="makeRequest()">ОТПРАВИТЬ</button>
       </div>
 
     </div>
-  </div>
 
+  </div>
 </div>
-<div class="summaryTable">
+
+<div id="result">
   <h2>Итоговая таблица по запросу:</h2>
-<div>
-  <span *ngFor="let sel of selectedColumns"> {{sel}} </span>
-</div>
-<div>
-  <p *ngFor="let col of combined" >
-  {{col}}
-  </p>
-</div>
+  <table>
+    <tr>
+      <th *ngFor="let sel of selectedColumns">{{sel}}</th>
+    </tr>
+    <tr>
+      <td *ngFor="let col of combined">{{col}}</td>
+    </tr>
+  </table>
 </div>

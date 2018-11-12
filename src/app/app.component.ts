@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    //вытаскиваем данные из базы посредством подписки на событие
     this.receiveDataUser = this.httpService
       .getDataUsers()
       .subscribe((users) => this.users = users['data']);
@@ -46,6 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
+  //выводим столбцы в зависимости от того какая таблица выбрана
   switchTable() {
     this.tableName = (<HTMLSelectElement>document.querySelector('select')).value;
     const getColumnsSubscription = this.httpService
@@ -56,19 +58,23 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
+  // функция добавление полей в "выбранные"
   fieldsForward() {
-    const flags = document.querySelectorAll('input[type="checkbox"]');
+    document.getElementById('result').style.display = 'none';
+    const flags = <HTMLInputElement>document.querySelectorAll('input[type="checkbox"]');
     const len = flags.length;
     for (let i = 0; i < len; i++) {
-      if ((flags[i].checked) && (!(this.selectedColumns.includes(flags[i].value)))) {
+      if ((<HTMLInputElement>flags[i].checked) && (!(this.selectedColumns.includes(flags[i].value)))) { //если поле
+        // чекнуто и его еще нет в массиве выбранных полей
         this.selectedColumns.push(flags[i].value);
         flags[i].checked = false;
       }
     }
   }
 
+  //удаление поля из массива
   deleteColumn() {
-    const flags = document.querySelectorAll('.choose > input[type="checkbox"]');
+    const flags = <HTMLInputElement>document.querySelectorAll('.choose > input[type="checkbox"]');
     const len = flags.length;
     for (let i = 0; i < len; i++) {
       if (flags[i].checked) {
@@ -78,8 +84,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  //перемещение поля вверх
   upColumns() {
-    const flags = document.querySelectorAll('.choose > input[type="checkbox"]');
+    const flags = <HTMLInputElement>document.querySelectorAll('.choose > input[type="checkbox"]');
     const len = flags.length;
     for (let i = 0; i < len; i++) {
       if (flags[i].checked) {
@@ -89,8 +96,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  //перемещение поля вниз
   dawnColumns() {
-    const flags = document.querySelectorAll('.choose > input[type="checkbox"]');
+    const flags = <HTMLInputElement>document.querySelectorAll('.choose > input[type="checkbox"]');
     const len = flags.length;
     for (let i = 0; i < len; i++) {
       if (flags[i].checked) {
@@ -100,31 +108,32 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  //функция запроса к базе анных
   makeRequest() {
-    this.combined = [];
-    for (let i = 0; i < this.selectedColumns.length; i++) {
-      for (let key in this.columnUser) {
-        if (this.selectedColumns[i] === this.columnUser[key].name) {
+    document.getElementById('result').style.display = 'block';
+    this.combined = []; //очищаем массив
+    for (let i = 0; i < this.selectedColumns.length; i++) { //проходим по массивы выбранных столбцов
+      this.combined[i] = []; // каждый i-ый элимент делаем массивом
+      for (let key in this.columnUser) { // проходим по массиву столбцов user
+        if (this.selectedColumns[i] === this.columnUser[key].name) { //если в user найден такой столбец
           for (let j = 0; j < this.users.length; j++) {
-            // console.log(this.users[j][key]);
-            // this.combined[i] = this.users[j][key];
-            this.combined.push(this.users[j][key]);
-            // console.log(this.combined);
+            this.combined[i][j] = ' ' + this.users[j][key];  // кладем данные таблицы выбранного столбце по индексу в новый массив
           }
         } else {
-          for (let keyy in this.columnsAction) {
-          if (this.selectedColumns[i] === this.columnsAction[keyy].name) {
-              for (let j = 0; j < this.actions.length; j++) {
-                this.combined.push(this.actions[j][keyy]);
-                // console.log(this.combined);
+          for (let keyy in this.columnsAction) {  // проходим по массиву столбцов action
+            if (this.selectedColumns[i] === this.columnsAction[keyy].name) {  //если найден такой столбец
+              for (let q = 0; q < this.actions.length; q++) {
+                this.combined[i][q] = ' ' + this.actions[q][keyy];  // кладем данные таблицы выбранного столбце по индексу в новый массив
               }
             }
           }
         }
-      }}
-   console.log(this.combined);
+      }
+    }
   }
+
   ngOnDestroy(): void {
+    // отписываемся от событий
     this.receiveDataUser.unsubscribe();
     this.receiveDataActions.unsubscribe();
     this.receiveColumnsUser.unsubscribe();
