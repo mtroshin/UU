@@ -10,11 +10,11 @@ import {Actions} from './models/actions';
   providedIn: 'root'
 })
 export class HttpService {
-  url = 'http://localhost:8127/';
+  url = 'http://localhost:8127';
   constructor(private http: HttpClient) { }
 
   getColumnsTable( part: string ): Observable<Column[]> {
-        return this.http.get<Column[]>(this.url + 'metadata?table=' + part);
+        return this.http.get<Column[]>(this.url + '/metadata?table=' + part);
     }
   getDataUsers(): Observable<Users[]> {
     return this.http.get<Users[]>(this.url + '/data?table=users');
@@ -24,10 +24,10 @@ export class HttpService {
   }
 
   getColumnsUser(): Observable<Column[]> {
-    return this.http.get<Column[]>(this.url + 'metadata?table=users');
+    return this.http.get<Column[]>(this.url + '/metadata?table=users');
   }
   getColumnsActions(): Observable<Column[]> {
-    return this.http.get<Column[]>(this.url + 'metadata?table=actions');
+    return this.http.get<Column[]>(this.url + '/metadata?table=actions');
   }
 
   }
