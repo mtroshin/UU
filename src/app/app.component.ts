@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
   receiveColumnsActions: Subscription;
   tableName: string;
   selectedColumns: string[] = [];
-  combined: string[] = [];
+  combined: string[][] = [];
   columnUser: Column[] = [];
   columnsAction: Column[] = [];
 
@@ -61,10 +61,10 @@ export class AppComponent implements OnInit, OnDestroy {
   // функция добавление полей в "выбранные"
   fieldsForward() {
     document.getElementById('result').style.display = 'none';
-    const flags = <HTMLInputElement>document.querySelectorAll('input[type="checkbox"]');
+    const flags = (document.querySelectorAll<HTMLInputElement>('.availableFields input[type="checkbox"]'));
     const len = flags.length;
     for (let i = 0; i < len; i++) {
-      if ((<HTMLInputElement>flags[i].checked) && (!(this.selectedColumns.includes(flags[i].value)))) { //если поле
+      if ((flags[i].checked) && (!(this.selectedColumns.includes(flags[i].value)))) { //если поле
         // чекнуто и его еще нет в массиве выбранных полей
         this.selectedColumns.push(flags[i].value);
         flags[i].checked = false;
@@ -74,7 +74,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   //удаление поля из массива
   deleteColumn() {
-    const flags = <HTMLInputElement>document.querySelectorAll('.choose > input[type="checkbox"]');
+    const flags = Array.from(document.querySelectorAll<HTMLInputElement>('.selectedFields > input[type="checkbox"]'));
     const len = flags.length;
     for (let i = 0; i < len; i++) {
       if (flags[i].checked) {
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   //перемещение поля вверх
   upColumns() {
-    const flags = <HTMLInputElement>document.querySelectorAll('.choose > input[type="checkbox"]');
+    const flags = Array.from(document.querySelectorAll<HTMLInputElement>('.selectedFields > input[type="checkbox"]'));
     const len = flags.length;
     for (let i = 0; i < len; i++) {
       if (flags[i].checked) {
@@ -98,7 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   //перемещение поля вниз
   dawnColumns() {
-    const flags = <HTMLInputElement>document.querySelectorAll('.choose > input[type="checkbox"]');
+    const flags = Array.from(document.querySelectorAll<HTMLInputElement>('.selectedFields > input[type="checkbox"]'));
     const len = flags.length;
     for (let i = 0; i < len; i++) {
       if (flags[i].checked) {
@@ -110,10 +110,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   //функция запроса к базе анных
   makeRequest() {
+    console.log(this.selectedColumns)
     document.getElementById('result').style.display = 'block';
     this.combined = []; //очищаем массив
     for (let i = 0; i < this.selectedColumns.length; i++) { //проходим по массивы выбранных столбцов
-      this.combined[i] = []; // каждый i-ый элимент делаем массивом
+      this.combined[i] = new Array<string>(); // каждый i-ый элимент делаем массивом
+      
       for (let key in this.columnUser) { // проходим по массиву столбцов user
         if (this.selectedColumns[i] === this.columnUser[key].name) { //если в user найден такой столбец
           for (let j = 0; j < this.users.length; j++) {
